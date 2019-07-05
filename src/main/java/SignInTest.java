@@ -1,4 +1,5 @@
-import com.sun.javafx.PlatformUtil;
+import com.sun.jna.Platform;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -19,9 +20,13 @@ public class SignInTest {
 
         driver.findElement(By.linkText("Your trips")).click();
         driver.findElement(By.id("SignIn")).click();
-
+        waitFor(4000);
+        
+        //This signin-popup is in iframe so we need to switch to iframe
+        driver.switchTo().frame("modal_window");
+        
         driver.findElement(By.id("signInButton")).click();
-
+        
         String errors1 = driver.findElement(By.id("errors1")).getText();
         Assert.assertTrue(errors1.contains("There were errors in your submission"));
         driver.quit();
@@ -36,13 +41,13 @@ public class SignInTest {
     }
 
     private void setDriverPath() {
-        if (PlatformUtil.isMac()) {
+        if (Platform.isMac()) {
             System.setProperty("webdriver.chrome.driver", "chromedriver");
         }
-        if (PlatformUtil.isWindows()) {
+        if (Platform.isWindows()) {
             System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
         }
-        if (PlatformUtil.isLinux()) {
+        if (Platform.isLinux()) {
             System.setProperty("webdriver.chrome.driver", "chromedriver_linux");
         }
     }
